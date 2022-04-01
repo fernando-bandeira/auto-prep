@@ -21,7 +21,7 @@ class Worker(QObject):
         last_friday = last_friday.strftime('%Y-%m-%d')
 
         api_key = ''
-        workspace_id = '5ca4d7e069b7cc19c5bdf4be'
+        workspace_id = ''
 
         response = requests.get(
             f'https://api.clockify.me/api/v1/workspaces/{workspace_id}/users',
