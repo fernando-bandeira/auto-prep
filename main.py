@@ -20,8 +20,8 @@ class Worker(QObject):
         last_monday = last_monday.strftime('%Y-%m-%d')
         last_friday = last_friday.strftime('%Y-%m-%d')
 
-        api_key = ''
-        workspace_id = ''
+        api_key = ''  # API key goes here
+        workspace_id = ''  # It's important you inform the ID of the workspace, otherwise it won't work
 
         response = requests.get(
             f'https://api.clockify.me/api/v1/workspaces/{workspace_id}/users',
@@ -84,21 +84,21 @@ class App(QMainWindow):
         self.cw = QWidget()
         self.grid = QGridLayout(self.cw)
 
-        self.txt = QLabel('Clique abaixo para extrair dados do Clockify')
+        self.txt = QLabel('Click to extract data from Clockify')
 
-        self.scrape_btn = QPushButton('Extrair dados')
+        self.scrape_btn = QPushButton('Extract')
         self.scrape_btn.clicked.connect(self.scrape)
 
         self.table = QTableWidget()
         self.table.setRowCount(1)
         self.table.setColumnCount(3)
-        self.table.setItem(0, 0, QTableWidgetItem('Membro'))
-        self.table.setItem(0, 1, QTableWidgetItem('Horas'))
-        self.table.setItem(0, 2, QTableWidgetItem('Minutos'))
+        self.table.setItem(0, 0, QTableWidgetItem('Member'))
+        self.table.setItem(0, 1, QTableWidgetItem('Hours'))
+        self.table.setItem(0, 2, QTableWidgetItem('Minutes'))
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
-        self.copy_btn = QPushButton('Copiar dados')
+        self.copy_btn = QPushButton('Copy data')
         self.copy_btn.clicked.connect(self.copy_data)
         self.copy_btn.setDisabled(True)
 
@@ -111,7 +111,7 @@ class App(QMainWindow):
 
     def scrape(self):
         self.scrape_btn.setDisabled(True)
-        self.txt.setText('Obtendo dados...')
+        self.txt.setText('Obtaining data...')
         self.thread = QThread()
         self.worker = Worker()
         self.worker.moveToThread(self.thread)
@@ -124,9 +124,9 @@ class App(QMainWindow):
     def update_table(self, data):
         self.table.setRowCount(len(data) + 1)
         for i, d in enumerate(data):
-            self.table.setItem(i + 1, 0, QTableWidgetItem(d['Membro']))
-            self.table.setItem(i + 1, 1, QTableWidgetItem(d['Horas']))
-            self.table.setItem(i + 1, 2, QTableWidgetItem(d['Minutos']))
+            self.table.setItem(i + 1, 0, QTableWidgetItem(d['Member']))
+            self.table.setItem(i + 1, 1, QTableWidgetItem(d['Hours']))
+            self.table.setItem(i + 1, 2, QTableWidgetItem(d['Minutes']))
 
     def finish(self):
         self.scrape_btn.setDisabled(False)
@@ -140,7 +140,7 @@ class App(QMainWindow):
         rows = ['\t'.join(table_data[i * 3:(i + 1) * 3]) for i in interval]
         items = '\n'.join(rows)
         pyperclip.copy(items)
-        QMessageBox.about(self, 'Sucesso', 'Dados copiados!')
+        QMessageBox.about(self, 'Success', 'Copied!')
 
 
 if __name__ == '__main__':
